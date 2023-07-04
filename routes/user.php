@@ -20,6 +20,7 @@ use App\Http\Controllers\User\DashboardController;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/surveys/{id}', [SurveyController::class, 'index'])->name('surveys.show');
+    Route::post('/surveys/{id}', [SurveyController::class, 'takeSurvey'])->name('surveys.take');
     Route::get('/surveys/{survey_id}/category/{category_id}', [SurveyController::class, 'categoryShow'])->name('surveys.categories.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

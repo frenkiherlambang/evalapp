@@ -41,6 +41,12 @@ class DatabaseSeeder extends Seeder
                 );
             });
         }
+        $questions = Question::all();
+        foreach($questions as $question) {
+            $question->choices()->inRandomOrder()->first()->update([
+                'is_correct' => true,
+            ]);
+        }
        
     }
 }

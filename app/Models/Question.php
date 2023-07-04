@@ -13,4 +13,9 @@ class Question extends Model
     {
         return $this->hasMany(Choice::class);
     }
+
+    public function randomChoices()
+    {
+        return $this->hasMany(Choice::class)->inRandomOrder();
+    }
 }

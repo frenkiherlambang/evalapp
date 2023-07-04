@@ -6,6 +6,7 @@ use App\Models\Survey;
 use Illuminate\Http\Request;
 use App\Services\BreadcrumbService;
 use App\Http\Controllers\Controller;
+use App\Models\Attempt;
 
 class DashboardController extends Controller
 {
@@ -17,6 +18,7 @@ class DashboardController extends Controller
         $breadcrumbs = new BreadcrumbService();
         $breadcrumbs = $breadcrumbs->generateBreadcrumbs();
         Survey::all();
+        
         return view('users.dashboard', [
             'breadcrumbs' => $breadcrumbs,
             'surveys' => Survey::all()
