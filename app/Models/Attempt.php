@@ -9,8 +9,22 @@ class Attempt extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'survey_data' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class);
+    }
+
+    public function attemptQuestions()
+    {
+        return $this->hasMany(AttemptQuestion::class);
     }
 }

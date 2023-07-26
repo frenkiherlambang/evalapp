@@ -18,4 +18,9 @@ class Survey extends Model
     {
         return $this->hasMany(Attempt::class)->where('user_id', auth()->id());
     }
+
+    public function questions()
+    {
+        return $this->hasManyThrough(Question::class, Category::class);
+    }
 }

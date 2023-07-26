@@ -7,6 +7,8 @@ use App\Models\Attempt;
 use App\Models\Category;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Models\AttemptChoice;
+use App\Models\AttemptQuestion;
 use App\Services\BreadcrumbService;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
@@ -29,13 +31,11 @@ class SurveyController extends Controller
     public function categoryShow($survey_id, $category_id, BreadcrumbService $breadcrumbService): View
     {
         $attempt = Attempt::where('user_id', auth()->id())->where('survey_id', $survey_id)->first();
-
         $surveyQuestionData = $attempt->survey_data;
-        $surveyQuestionData = json_decode($surveyQuestionData, true);
-        // dd($categories[0]['random_questions'][0]['random_choices']);
         $breadcrumbs = $breadcrumbService->generateBreadcrumbs();
         return view('users.surveys.categories.show', [
             'survey' => Survey::where('id', $survey_id)->first(),
+            'attempt' => $attempt,
             'category' => Category::where('id', $category_id)->first(),
             'breadcrumbs' => $breadcrumbs,
             'surveyQuestionData' => $surveyQuestionData[$category_id - 1],
@@ -51,13 +51,16 @@ class SurveyController extends Controller
                 'id' => $id,
             ]);
         } else {
-            $surveyData = Category::where('survey_id', $id)->with('randomQuestions', 'randomQuestions.randomChoices')->get()->toJson();
+            $surveyData = Category::where('survey_id', $id)->with([
+                'randomQuestions:id,category_id,content',
+                'randomQuestions.randomChoices:id,question_id,content'
+            ])->select(['id', 'name', 'survey_id'])->get()->toArray();
             $attempt = new Attempt();
             $attempt->user_id = auth()->id();
             $attempt->survey_id = $id;
             $attempt->survey_data = $surveyData;
             $attempt->save();
-        }        
+        }
         return redirect()->route('users.surveys.show', [
             'id' => $id
         ]);

@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Choice extends Model
+class Answer extends Model
 {
     use HasFactory;
 
-    public function question()
+    public function attemptQuestion()
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(AttemptQuestion::class);
     }
 }

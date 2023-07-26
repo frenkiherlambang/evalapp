@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('survey_id')->constrained()->onDelete('cascade');
             $table->string('name');
+            $table->json('feedbacks')->nullable();
             $table->timestamps();
         });
     }

@@ -22,6 +22,17 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => ['required', 'image', 'max:1024', 'mimes:jpg,jpeg,png'],
+        ]);
+
+        $request->user()->updateProfilePhoto($request->file('avatar'));
+
+        return redirect()->back();
+    }
+
     /**
      * Update the user's profile information.
      */

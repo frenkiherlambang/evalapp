@@ -10,11 +10,17 @@
                         </svg>
                         @if ($loop->last)
                             <p class="ml-4 text-sm font-medium text-gray-400">
+                                @if (str_contains($breadcrumb['url'], 'category'))
+                                    Kategori:
+                                @endif
                                 {{ $breadcrumb['name'] }}
                             </p>
                         @else
                             <a href="{{ $breadcrumb['url'] }}"
                                 class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-900">
+                                @if (str_contains($breadcrumb['url'], 'category'))
+                                    Kategori:
+                                @endif
                                 {{ $breadcrumb['name'] }}
                             </a>
                         @endif
