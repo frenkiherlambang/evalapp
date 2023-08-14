@@ -21,16 +21,28 @@ class SurveyController extends Controller
      */
     public function index($id, BreadcrumbService $breadcrumbService): View
     {
+        $attempt = Attempt::where('user_id', auth()->id())->where('survey_id', $id)->latest()->first();
         $breadcrumbs = $breadcrumbService->generateBreadcrumbs();
         return view('users.surveys.show', [
             'survey' => Survey::where('id', $id)->first(),
             'breadcrumbs' => $breadcrumbs,
+            'attempt' => $attempt,
+        ]);
+    }
+
+    public function submitAttempt($id): RedirectResponse
+    {
+        $attempt = Attempt::where('user_id', auth()->id())->where('survey_id', $id)->latest()->first();
+        $attempt->submitted_at = now();
+        $attempt->save();
+        return redirect()->route('users.surveys.show', [
+            'id' => $id,
         ]);
     }
 
     public function categoryShow($survey_id, $category_id, BreadcrumbService $breadcrumbService): View
     {
-        $attempt = Attempt::where('user_id', auth()->id())->where('survey_id', $survey_id)->first();
+        $attempt = Attempt::where('user_id', auth()->id())->where('survey_id', $survey_id)->latest()->first();
         $surveyQuestionData = $attempt->survey_data;
         $breadcrumbs = $breadcrumbService->generateBreadcrumbs();
         return view('users.surveys.categories.show', [

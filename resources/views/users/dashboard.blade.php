@@ -56,7 +56,7 @@
                                 <div class="font-bold">
                                     {{ auth()->user()->name }}
                                 </div>
-                                <p class="text-gray-500">
+                                <p class="text-gray-600">
                                     {{ auth()->user()->email }}
 
                                 </p>
@@ -83,21 +83,30 @@
 
 
                 </div>
-                <div class="md:w-2/3 w-full">
+                <div class="md:w-2/3 w-full flex flex-col gap-4">
                     @foreach ($surveys as $survey)
                         <div class="bg-white shadow rounded-lg">
                             <div class="px-4 py-5 sm:p-6">
                                 <h3 class="text-base font-semibold leading-6 text-gray-900">{{ $survey->name }}</h3>
-                                <div class="mt-2 max-w-xl text-sm text-gray-500">
+                                <div class="mt-2 max-w-xl text-sm text-gray-600">
                                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae voluptatibus
                                         corrupti atque repudiandae nam.</p>
+                                </div>
+                                <div class="py-2 mt-5 flex gap-4 text-gray-600">
+                                    <div class="flex items-center gap-1 rounded-full border px-3 py-1">
+                                        {{ $survey->categories->count() }} Categories
+                                    </div>
+
+                                    <div class="flex items-center gap-1 rounded-full border px-3 py-1">
+                                        {{ $survey->questions->count() }} Questions
+                                    </div>
                                 </div>
                                 <div class="flex items-center justify-left space-x-4 mt-5">
                                     <form method="POST" action="{{ route('users.surveys.show', $survey->id) }}">
                                         @csrf
                                         <button type="submit"
                                             class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-                                            @if ($survey->userAttempts->count() > 0)
+                                            @if (auth()->user()->attempts()->where('submitted_at', null)->where('survey_id', $survey->id)->first())
                                                 Lanjutkan survey
                                             @else
                                                 Ambil survey
@@ -125,13 +134,17 @@
                                     <div class="w-full">
                                         <span id="ProgressLabel" class="sr-only">Progress</span>
 
-                                        <span role="progressbar" aria-labelledby="ProgressLabel"
-                                            aria-valuenow="50" class="block rounded-full bg-gray-200">
-                                            <span
-                                                class="block h-4 rounded-full bg-indigo-600 text-center text-[10px]/4"
-                                                style="width: {{(auth()->user()->answers->where('survey_id', $survey->id)->count() /$survey->questions->count() *100)}}%">
-                                                <span class="font-bold text-white"> {{ (auth()->user()->answers->where('survey_id', $survey->id)->count() /$survey->questions->count()) *100 }}% </span>
-                                            </span>
+                                        <span role="progressbar" aria-labelledby="ProgressLabel" aria-valuenow="50"
+                                            class="block rounded-full bg-gray-200">
+                                            @if ($survey->questions->count() > 0)
+                                                <span
+                                                    class="block h-4 rounded-full bg-indigo-600 text-center text-[10px]/4"
+                                                    style="width: {{ (auth()->user()->answers->where('survey_id', $survey->id)->count() /$survey->questions->count()) *100 }}%">
+                                                    <span class="font-bold text-white">
+                                                        {{ (auth()->user()->answers->where('survey_id', $survey->id)->count() /$survey->questions->count()) *100 }}%
+                                                    </span>
+                                                </span>
+                                            @endif
                                         </span>
                                     </div>
                                 </div>

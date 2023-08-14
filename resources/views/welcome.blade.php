@@ -228,9 +228,9 @@
                                 <div class="max-w-xs mx-auto sm:max-w-none flex flex-wrap sm:justify-center gap-4 aos-init aos-animate"
                                     data-aos="zoom-y-out" data-aos-delay="300">
                                     <a class="px-4 py-3 rounded text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto sm:mb-0"
-                                        href="#0">Mulai Mencoba</a>
+                                        href="register">Mulai Mencoba</a>
                                     <a class="px-4 py-3 rounded text-white bg-gray-900 hover:bg-gray-800 w-full sm:w-auto sm:mb-0"
-                                        href="#">Pelajari</a>
+                                        href="#explore">Pelajari</a>
                                 </div>
                             </div>
                         </div>

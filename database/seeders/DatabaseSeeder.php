@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         $user = \App\Models\User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@evalapp.com',
+            'is_admin' => true,
             'password' => bcrypt('password'),
         ]);
 
@@ -35,31 +36,31 @@ class DatabaseSeeder extends Seeder
                 'survey_id' => 1,
                 'feedbacks' => [
                     [
-                        'points' => 20,
+                        'points' => 400,
                         'text' => 'You need to work harder.',
                         'color' => '#FEE2E2',
                         'fontColor' => '#B91C1C'
                     ],
                     [
-                        'points' => 40,
+                        'points' => 800,
                         'text' => 'You can do better.',
                         'color' => '#ffedd5',
                         'fontColor' => '#c2410c'
                     ],
                     [
-                        'points' => 60,
+                        'points' => 1200,
                         'text' => 'You are doing good.',
                         'color' => '#fef3c7',
                         'fontColor' => '#b45309'
                     ],
                     [
-                        'points' => 80,
+                        'points' => 1600,
                         'text' => 'You are doing great.',
                         'color' => '#fef9c3',
                         'fontColor' => '#a16207'
                     ],
                     [
-                        'points' => 100,
+                        'points' => 2000,
                         'text' => 'You are doing excellent.',
                         'color' => '#dcfce7',
                         'fontColor' => '#15803d'
@@ -90,6 +91,12 @@ class DatabaseSeeder extends Seeder
         $attempt->save();
 
         foreach($questions as $question) {
+            foreach($question->choices as $key => $choice)
+            {
+                $choice->update([
+                    'score' => ($key + 1) * 25,
+                ]);
+            }
             $choice = $question->choices()->inRandomOrder()->first();
             $choice->update([
                 'is_correct' => true,

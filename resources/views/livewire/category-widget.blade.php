@@ -17,12 +17,10 @@
                 ])>
                     <span class="flex items-center">
                         <span class="mr-3 text-gray-400">
-                            {{ \App\Models\Choice::find($choice['id'])->is_correct ? 'Benar' : 'Salah' }}
+                            {{ \App\Models\Choice::find($choice['id'])->score }}
                         </span>
-                        <input wire:model="answers.{{$choice['question_id']}}" type="radio" value="{{ $choice['id'] }}"
-                            class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-600"
-                            aria-labelledby="pricing-plans-0-label"
-                            aria-describedby="pricing-plans-0-description-0 pricing-plans-0-description-1">
+                        <input wire:model="answers.{{$choice['question_id']}}" type="radio" value="{{ $choice['id'] }}"  id="{{ rand() }}"
+                            class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-600">
                         <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
                         <span  class="ml-3 font-medium">
                             {{ $choice['content'] }}
@@ -51,8 +49,9 @@
                 <li>
                     <a  wire:click="changeQuestion({{ $loop->index }})" wire:key="{{ $loop->index }}"
                         @class([
-                            'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-white',
-                            'block h-8 w-8 rounded border-gray-300 border bg-white text-center leading-8 text-slate-900' => $loop->index != $currentQuestionId,
+                            'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8',
+                            'block h-8 w-8 rounded border-gray-300 border bg-white text-center leading-8 text-gray-800' => $loop->index != $currentQuestionId,
+                            'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-white' => $loop->index == $currentQuestionId,
                         ])
                         >
                         {{ $loop->index + 1 }}

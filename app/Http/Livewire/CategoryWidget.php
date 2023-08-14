@@ -33,6 +33,7 @@ class CategoryWidget extends Component
 
     public function updatingAnswers($value, $key)
     {
+
         $this->answers[$key] = $value;
         $selectedChoice = Choice::find($value);
         // dd($selectedChoice->question->category_id);
@@ -46,7 +47,7 @@ class CategoryWidget extends Component
             'choice_id' => $value,
             'answer' => $selectedChoice['content'],
             'is_correct' => $selectedChoice->is_correct,
-            'points' => $selectedChoice->is_correct ? 5 : 0,
+            'points' => $selectedChoice->score,
         ]);
 
         $points = Answer::where([
@@ -55,7 +56,10 @@ class CategoryWidget extends Component
         ])->sum('points');
         Log::debug('points: ' . $points);
         $category = Category::find($selectedChoice->question->category_id);
-        $feedback = collect($category->feedbacks)->where('points', '>=', $points)->first();
+        $feedback = collect($category->feedbacks)->where('points', '<=', $points)->sortByDesc('points')->first();
+        if(!$feedback) {
+            $feedback = collect($category->feedbacks)->sortBy('points')->first();
+        }
         Log::debug('feedback: ' . $feedback['text'] ?? 'no feedback');
         if($feedback) {
             CategoryFeedback::updateOrCreate([
@@ -68,6 +72,8 @@ class CategoryWidget extends Component
                 'points' => $points,
             ]);
         }
+        // change question to next question
+        $this->nextQuestion();
 
 
     }
@@ -79,6 +85,9 @@ class CategoryWidget extends Component
 
     public function nextQuestion()
     {
+        // dd($this->currentQuestion['id']);
+        // clear the answer for the current question
+        // $this->answers[$this->currentQuestion->id] = null;
         if($this->currentQuestionId < count($this->surveyQuestionData['random_questions']) - 1)
         {
             $this->currentQuestionId++;
