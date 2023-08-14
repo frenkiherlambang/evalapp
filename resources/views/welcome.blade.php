@@ -263,17 +263,17 @@
                 </a>
             </section>
 
-            <section id="explore" class="relative">
-                <div class="absolute inset-0 bg-gray-100 pointer-events-none mb-16" aria-hidden="true"></div>
+            <section id="explore" class="relative pb-16">
+                <div class="absolute inset-0 bg-gray-100 pointer-events-none " aria-hidden="true"></div>
                 <div class="absolute left-0 right-0 m-auto w-px p-px h-20 bg-gray-200 transform -translate-y-1/2">
                 </div>
                 <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
                     <div class="pt-12 md:pt-20">
-                        <div class="max-w-3xl mx-auto text-center pb-12 md:pb-16">
+                        {{-- <div class="max-w-3xl mx-auto text-center pb-12 md:pb-16">
                             <h1 class="h2 mb-4">Explore the solutions</h1>
                             <p class="text-xl text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit
                                 esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat.</p>
-                        </div>
+                        </div> --}}
                         <div x-data="{
                             tab: 'tab1',
                             activeTab: function(tab) {
@@ -473,7 +473,7 @@
                 </div>
             </section> --}}
         </main>
-        <footer>
+        {{-- <footer>
             <div class="max-w-6xl mx-auto px-4 sm:px-6">
                 <div class="grid sm:grid-cols-12 gap-8 py-8 md:py-12 border-t border-gray-200">
                     <div class="sm:col-span-12 lg:col-span-3">
@@ -612,10 +612,10 @@
                     <div class="text-sm text-gray-600 mr-4">© Cruip.com. All rights reserved.</div>
                 </div>
             </div>
-        </footer>
-        <div class="fixed bottom-0 right-0 w-full md:bottom-8 md:right-12 md:w-auto z-60">
+        </footer> --}}
+        {{-- <div class="fixed bottom-0 right-0 w-full md:bottom-8 md:right-12 md:w-auto z-60">
 
-        </div>
+        </div> --}}
     </div>
 </body>
 
