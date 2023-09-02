@@ -8,6 +8,10 @@ use App\Models\Question;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Filament\Resources\QuestionResource\RelationManagers;
 use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
@@ -22,29 +26,26 @@ class QuestionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('survey_id')
-                    ->required(),
-                Forms\Components\TextInput::make('category_id')
-                    ->required(),
-                Forms\Components\TextInput::make('title')
+                Select::make('category_id')->relationship('category', 'name')->required(),
+                TextInput::make('title')
                     ->maxLength(255),
-                Forms\Components\Textarea::make('content')
+                Textarea::make('content')
                     ->required(),
-            ]);
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('survey_id'),
-                Tables\Columns\TextColumn::make('category_id'),
-                Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('content'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                TextColumn::make('survey.name'),
+                TextColumn::make('category.name'),
+                TextColumn::make('title'),
+                TextColumn::make('content'),
+                TextColumn::make('created_at')
+                    ->since(),
+                TextColumn::make('updated_at')
+                    ->since(),
             ])
             ->filters([
                 //

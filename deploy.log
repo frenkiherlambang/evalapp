@@ -1,0 +1,754 @@
+task deploy:info
+done deploy:info 97ms
+task deploy:setup
+[prod] run [ -d /var/www/web-evaluasi ] || mkdir -p /var/www/web-evaluasi;
+cd /var/www/web-evaluasi;
+[ -d .dep ] || mkdir .dep;
+[ -d releases ] || mkdir releases;
+[ -d shared ] || mkdir shared;
+[prod] Permission denied, please try again.
+[prod] run if [ ! -L /var/www/web-evaluasi/current ] && [ -d /var/www/web-evaluasi/current ]; then echo +accurate; fi
+done deploy:setup 16s 756ms
+task deploy:lock
+[localhost] laradock
+[prod] run [ -f /var/www/web-evaluasi/.dep/deploy.lock ] && echo +locked || echo 'laradock' > /var/www/web-evaluasi/.dep/deploy.lock
+done deploy:lock 213ms
+task deploy:release
+[prod] run cd /var/www/web-evaluasi && (if [ -h release ]; then echo +accurate; fi)
+[prod] +accurate
+[prod] run cd /var/www/web-evaluasi && (rm release)
+[prod] run cd /var/www/web-evaluasi && (if [ -d releases ] && [ "$(ls -A releases)" ]; then echo +yes; fi)
+[prod] +yes
+[prod] run cd /var/www/web-evaluasi && (cd releases && ls -t -1 -d */)
+[prod] 8/
+[prod] 7/
+[prod] 6/
+[prod] 5/
+[prod] 4/
+[prod] 3/
+[prod] 2/
+[prod] 1/
+[prod] run cd /var/www/web-evaluasi && (if [ -f .dep/releases_log ]; then echo +correct; fi)
+[prod] +correct
+[prod] run cd /var/www/web-evaluasi && (tail -n 300 .dep/releases_log)
+[prod] {"created_at":"2023-07-26T10:07:13+0000","release_name":"1","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:34:54+0000","release_name":"2","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:38:32+0000","release_name":"3","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:39:19+0000","release_name":"4","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:43:25+0000","release_name":"5","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:47:51+0000","release_name":"6","user":"Frenki Herlambang Prasetyo","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:51:09+0000","release_name":"7","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:51:22+0000","release_name":"8","user":"laradock","target":"HEAD"}
+[prod] run cd /var/www/web-evaluasi && (cat .dep/latest_release || echo 0)
+[prod] 8
+[prod] run cd /var/www/web-evaluasi && (if [ -d releases/9 ]; then echo +true; fi)
+[prod] run cd /var/www/web-evaluasi && (echo 9 > .dep/latest_release)
+[prod] run cd /var/www/web-evaluasi && (echo '{"created_at":"2023-08-14T04:52:45+0000","release_name":"9","user":"laradock","target":"HEAD"}' >> .dep/releases_log)
+[prod] run cd /var/www/web-evaluasi && (mkdir -p releases/9)
+[prod] run cd /var/www/web-evaluasi && ((man ln 2>&1 || ln -h 2>&1 || ln --help 2>&1) | grep -- --relative || true)
+[prod]        -r, --relative
+[prod] run cd /var/www/web-evaluasi && (ln -nfs --relative releases/9 /var/www/web-evaluasi/release)
+done deploy:release 1s 523ms
+task deploy:update_code
+[prod] run command -v 'git' || which 'git' || type -p 'git'
+[prod] /usr/bin/git
+[prod] run [ -d /var/www/web-evaluasi/.dep/repo ] || mkdir -p /var/www/web-evaluasi/.dep/repo
+[prod] run export GIT_TERMINAL_PROMPT='0' GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new'; [ -f /var/www/web-evaluasi/.dep/repo/HEAD ] || /usr/bin/git clone --mirror git@github.com:frenkiherlambang/evalapp.git /var/www/web-evaluasi/.dep/repo 2>&1
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git config --get remote.origin.url)
+Deployer\Exception\RunException: The command "cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git config --get remote.origin.url)" failed. in phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Component/Ssh/Client.php:110
+Stack trace:
+#0 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/functions.php(393): Deployer\Component\Ssh\Client->run()
+#1 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/functions.php(417): Deployer\{closure}()
+#2 phar:///var/www/evalapp/vendor/deployer/deployer/dep/recipe/deploy/update_code.php(95): Deployer\run()
+#3 [internal function]: Deployer\Importer\Importer::Deployer\{closure}()
+#4 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Task/Task.php(90): call_user_func()
+#5 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Executor/Worker.php(38): Deployer\Task\Task->run()
+#6 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Command/WorkerCommand.php(52): Deployer\Executor\Worker->execute()
+#7 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Command/Command.php(298): Deployer\Command\WorkerCommand->execute()
+#8 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Application.php(1040): Symfony\Component\Console\Command\Command->run()
+#9 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Application.php(301): Symfony\Component\Console\Application->doRunCommand()
+#10 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Application.php(171): Symfony\Component\Console\Application->doRun()
+#11 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Deployer.php(317): Symfony\Component\Console\Application->run()
+#12 phar:///var/www/evalapp/vendor/deployer/deployer/dep/bin/dep(96): Deployer\Deployer::run()
+#13 /var/www/evalapp/vendor/deployer/deployer/dep(4): require('...')
+#14 {main}
+task deploy:failed
+done deploy:failed 92ms
+task deploy:unlock
+[prod] run rm -f /var/www/web-evaluasi/.dep/deploy.lock
+done deploy:unlock 213ms
+task deploy:info
+done deploy:info 128ms
+task deploy:setup
+[prod] run [ -d /var/www/web-evaluasi ] || mkdir -p /var/www/web-evaluasi;
+cd /var/www/web-evaluasi;
+[ -d .dep ] || mkdir .dep;
+[ -d releases ] || mkdir releases;
+[ -d shared ] || mkdir shared;
+[prod] run if [ ! -L /var/www/web-evaluasi/current ] && [ -d /var/www/web-evaluasi/current ]; then echo +indeed; fi
+done deploy:setup 5s 708ms
+task deploy:lock
+[localhost] laradock
+[prod] run [ -f /var/www/web-evaluasi/.dep/deploy.lock ] && echo +locked || echo 'laradock' > /var/www/web-evaluasi/.dep/deploy.lock
+done deploy:lock 244ms
+task deploy:release
+[prod] run cd /var/www/web-evaluasi && (if [ -h release ]; then echo +appropriate; fi)
+[prod] +appropriate
+[prod] run cd /var/www/web-evaluasi && (rm release)
+[prod] run cd /var/www/web-evaluasi && (if [ -d releases ] && [ "$(ls -A releases)" ]; then echo +legitimate; fi)
+[prod] +legitimate
+[prod] run cd /var/www/web-evaluasi && (cd releases && ls -t -1 -d */)
+[prod] 9/
+[prod] 8/
+[prod] 7/
+[prod] 6/
+[prod] 5/
+[prod] 4/
+[prod] 3/
+[prod] 2/
+[prod] 1/
+[prod] run cd /var/www/web-evaluasi && (if [ -f .dep/releases_log ]; then echo +yes; fi)
+[prod] +yes
+[prod] run cd /var/www/web-evaluasi && (tail -n 300 .dep/releases_log)
+[prod] {"created_at":"2023-07-26T10:07:13+0000","release_name":"1","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:34:54+0000","release_name":"2","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:38:32+0000","release_name":"3","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:39:19+0000","release_name":"4","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:43:25+0000","release_name":"5","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:47:51+0000","release_name":"6","user":"Frenki Herlambang Prasetyo","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:51:09+0000","release_name":"7","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:51:22+0000","release_name":"8","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:52:45+0000","release_name":"9","user":"laradock","target":"HEAD"}
+[prod] run cd /var/www/web-evaluasi && (cat .dep/latest_release || echo 0)
+[prod] 9
+[prod] run cd /var/www/web-evaluasi && (if [ -d releases/10 ]; then echo +right; fi)
+[prod] run cd /var/www/web-evaluasi && (echo 10 > .dep/latest_release)
+[prod] run cd /var/www/web-evaluasi && (echo '{"created_at":"2023-08-14T04:54:56+0000","release_name":"10","user":"laradock","target":"HEAD"}' >> .dep/releases_log)
+[prod] run cd /var/www/web-evaluasi && (mkdir -p releases/10)
+[prod] run cd /var/www/web-evaluasi && ((man ln 2>&1 || ln -h 2>&1 || ln --help 2>&1) | grep -- --relative || true)
+[prod]        -r, --relative
+[prod] run cd /var/www/web-evaluasi && (ln -nfs --relative releases/10 /var/www/web-evaluasi/release)
+done deploy:release 1s 490ms
+task deploy:update_code
+[prod] run command -v 'git' || which 'git' || type -p 'git'
+[prod] /usr/bin/git
+[prod] run [ -d /var/www/web-evaluasi/.dep/repo ] || mkdir -p /var/www/web-evaluasi/.dep/repo
+[prod] run export GIT_TERMINAL_PROMPT='0' GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new'; [ -f /var/www/web-evaluasi/.dep/repo/HEAD ] || /usr/bin/git clone --mirror git@github.com:frenkiherlambang/evalapp.git /var/www/web-evaluasi/.dep/repo 2>&1
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git config --get remote.origin.url)
+[prod] git@github.com:frenkiherlambang/evalapp.git
+[prod] run export GIT_TERMINAL_PROMPT='0' GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new'; cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git remote update 2>&1)
+[prod] Fetching origin
+[prod] From github.com:frenkiherlambang/evalapp
+[prod]    4917972..0015ff3  master     -> master
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (if [ -h /var/www/web-evaluasi/release ]; then echo +true; fi)
+[prod] +true
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (readlink /var/www/web-evaluasi/release)
+[prod] releases/10
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git archive HEAD | tar -x -f - -C /var/www/web-evaluasi/releases/10 2>&1)
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git rev-list HEAD -1)
+[prod] 0015ff3a02b447c1f5d51d8d99de491ff2d379a9
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (echo '0015ff3a02b447c1f5d51d8d99de491ff2d379a9' > /var/www/web-evaluasi/releases/10/REVISION)
+done deploy:update_code 4s 191ms
+task deploy:shared
+[prod] run if [ -d /var/www/web-evaluasi/shared/storage ]; then echo +correct; fi
+[prod] +correct
+[prod] run rm -rf /var/www/web-evaluasi/releases/10/storage
+[prod] run mkdir -p `dirname /var/www/web-evaluasi/releases/10/storage`
+[prod] run ln -nfs --relative /var/www/web-evaluasi/shared/storage /var/www/web-evaluasi/releases/10/storage
+[prod] run if [ -d /var/www/web-evaluasi/shared/. ]; then echo +legitimate; fi
+[prod] +legitimate
+[prod] run if [ -f /var/www/web-evaluasi/shared/.env ]; then echo +precise; fi
+[prod] +precise
+[prod] run if [ -f $(echo /var/www/web-evaluasi/releases/10/.env) ]; then rm -rf /var/www/web-evaluasi/releases/10/.env; fi
+[prod] run if [ ! -d $(echo /var/www/web-evaluasi/releases/10/.) ]; then mkdir -p /var/www/web-evaluasi/releases/10/.;fi
+[prod] run [ -f /var/www/web-evaluasi/shared/.env ] || touch /var/www/web-evaluasi/shared/.env
+[prod] run ln -nfs --relative /var/www/web-evaluasi/shared/.env /var/www/web-evaluasi/releases/10/.env
+done deploy:shared 2s 164ms
+task deploy:writable
+[prod] run if [ -h /var/www/web-evaluasi/release ]; then echo +appropriate; fi
+[prod] +appropriate
+[prod] run cd /var/www/web-evaluasi/releases/10 && (mkdir -p bootstrap/cache storage storage/app storage/app/public storage/framework storage/framework/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (ps axo comm,user | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | sort | awk '{print $NF}' | uniq)
+[prod] www-data
+[prod] run cd /var/www/web-evaluasi/releases/10 && (chmod 2>&1; true)
+[prod] chmod: missing operand
+[prod] Try 'chmod --help' for more information.
+[prod] run cd /var/www/web-evaluasi/releases/10 && (if hash setfacl 2>/dev/null; then echo +correct; fi)
+[prod] +correct
+[prod] run cd /var/www/web-evaluasi/releases/10 && (if id -u root &>/dev/null 2>&1 || exit 0; then echo +correct; fi)
+[prod] +correct
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p bootstrap/cache | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX bootstrap/cache)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX bootstrap/cache)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/app | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/app)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/app)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/app/public | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/app/public)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/app/public)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/framework | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/framework)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/framework)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/framework/cache | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/framework/cache)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/framework/cache)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/framework/cache/data | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/framework/cache/data)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/framework/cache/data)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/framework/sessions | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/framework/sessions)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/framework/sessions)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/framework/views | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/framework/views)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/framework/views)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (getfacl -p storage/logs | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX storage/logs)
+[prod] run cd /var/www/web-evaluasi/releases/10 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX storage/logs)
+done deploy:writable 8s 207ms
+task deploy:vendors
+[prod] run if hash unzip 2>/dev/null; then echo +true; fi
+[prod] +true
+[prod] run if [ -f /var/www/web-evaluasi/.dep/composer.phar ]; then echo +yes; fi
+[prod] run if hash composer 2>/dev/null; then echo +accurate; fi
+[prod] +accurate
+[prod] run command -v 'composer' || which 'composer' || type -p 'composer'
+[prod] /usr/local/bin/composer
+[prod] run command -v 'php' || which 'php' || type -p 'php'
+[prod] /usr/bin/php
+[prod] run cd /var/www/web-evaluasi/releases/10 && /usr/bin/php /usr/local/bin/composer install --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader 2>&1
+[prod] Composer plugins have been disabled for safety in this non-interactive session. Set COMPOSER_ALLOW_SUPERUSER=1 if you want to allow plugins to run as root/super user.
+[prod] Do not run Composer as root/super user! See https://getcomposer.org/root for details
+[prod] Installing dependencies from lock file
+[prod] Verifying lock file contents can be installed on current platform.
+[prod] Dependency resolution completed in 0.001 seconds
+[prod] Package operations: 93 installs, 0 updates, 0 removals
+[prod] Installs: symfony/finder:v6.3.0, symfony/polyfill-mbstring:v1.27.0, symfony/polyfill-intl-normalizer:v1.27.0, symfony/polyfill-intl-grapheme:v1.27.0, symfony/polyfill-ctype:v1.27.0, symfony/string:v6.3.0, psr/container:2.0.2, symfony/service-contracts:v3.3.0, symfony/deprecation-contracts:v3.3.0, symfony/console:v6.3.0, voku/portable-ascii:2.0.1, symfony/polyfill-php80:v1.27.0, phpoption/phpoption:1.9.1, graham-campbell/result-type:v1.1.1, vlucas/phpdotenv:v5.5.0, symfony/css-selector:v6.3.0, tijsverkoyen/css-to-inline-styles:2.2.6, symfony/var-dumper:v6.3.0, symfony/polyfill-uuid:v1.27.0, symfony/uid:v6.3.0, symfony/routing:v6.3.0, symfony/process:v6.3.0, symfony/polyfill-php72:v1.27.0, symfony/polyfill-intl-idn:v1.27.0, symfony/mime:v6.3.0, psr/event-dispatcher:1.0.0, symfony/event-dispatcher-contracts:v3.3.0, symfony/event-dispatcher:v6.3.0, psr/log:3.0.0, doctrine/lexer:3.0.0, egulias/email-validator:4.0.1, symfony/mailer:v6.3.0, symfony/polyfill-php83:v1.27.0, symfony/http-foundation:v6.3.0, symfony/error-handler:v6.3.0, symfony/http-kernel:v6.3.0, ramsey/collection:2.0.0, brick/math:0.11.0, ramsey/uuid:4.7.4, psr/simple-cache:3.0.0, nunomaduro/termwind:v1.15.1, symfony/translation-contracts:v3.3.0, symfony/translation:v6.3.0, nesbot/carbon:2.67.0, monolog/monolog:3.3.1, league/mime-type-detection:1.11.0, league/flysystem:3.15.1, league/flysystem-local:3.15.0, nette/utils:v4.0.0, nette/schema:v1.2.3, dflydev/dot-access-data:v3.0.2, league/config:v1.2.0, league/commonmark:2.4.0, laravel/serializable-closure:v1.3.0, guzzlehttp/uri-template:v1.0.1, fruitcake/php-cors:v1.2.0, webmozart/assert:1.11.0, dragonmantank/cron-expression:v3.3.2, doctrine/inflector:2.0.8, laravel/framework:v10.13.5, blade-ui-kit/blade-icons:1.5.2, danharrin/date-format-converter:v0.3.0, deployer/deployer:v7.3.1, spatie/laravel-package-tools:1.15.0, livewire/livewire:v2.12.3, spatie/invade:1.1.1, masterminds/html5:2.8.1, league/uri-parser:1.4.1, tgalopin/html-sanitizer:1.5.0, ryangjchandler/blade-capture-directive:v0.3.0, filament/support:v2.17.52, blade-ui-kit/blade-heroicons:1.4.0, filament/notifications:v2.17.52, filament/forms:v2.17.52, akaunting/laravel-money:4.0.1, filament/tables:v2.17.52, danharrin/livewire-rate-limiting:v1.1.0, filament/filament:v2.17.52, psr/http-message:2.0, psr/http-client:1.0.2, ralouphie/getallheaders:3.0.3, psr/http-factory:1.0.2, guzzlehttp/psr7:2.5.0, guzzlehttp/promises:2.0.0, guzzlehttp/guzzle:7.7.0, laravel/sanctum:v3.2.5, laravel/telescope:v4.15.2, nikic/php-parser:v4.15.5, psy/psysh:v0.11.18, laravel/tinker:v2.8.1, nativephp/php-bin:0.3.0, nativephp/laravel:0.3.0, nativephp/electron:0.3.3
+[prod]   - Downloading blade-ui-kit/blade-icons (1.5.2)
+[prod]   - Downloading masterminds/html5 (2.8.1)
+[prod]   - Downloading filament/support (v2.17.52)
+[prod]   - Downloading filament/notifications (v2.17.52)
+[prod]   - Downloading filament/forms (v2.17.52)
+[prod]   - Downloading filament/tables (v2.17.52)
+[prod]   - Downloading filament/filament (v2.17.52)
+[prod]   - Downloading nativephp/php-bin (0.3.0)
+[prod]   - Downloading nativephp/laravel (0.3.0)
+[prod]   - Downloading nativephp/electron (0.3.3)
+[prod]   - Installing symfony/finder (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-mbstring (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-intl-normalizer (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-intl-grapheme (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-ctype (v1.27.0): Extracting archive
+[prod]   - Installing symfony/string (v6.3.0): Extracting archive
+[prod]   - Installing psr/container (2.0.2): Extracting archive
+[prod]   - Installing symfony/service-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/deprecation-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/console (v6.3.0): Extracting archive
+[prod]   - Installing voku/portable-ascii (2.0.1): Extracting archive
+[prod]   - Installing symfony/polyfill-php80 (v1.27.0): Extracting archive
+[prod]   - Installing phpoption/phpoption (1.9.1): Extracting archive
+[prod]   - Installing graham-campbell/result-type (v1.1.1): Extracting archive
+[prod]   - Installing vlucas/phpdotenv (v5.5.0): Extracting archive
+[prod]   - Installing symfony/css-selector (v6.3.0): Extracting archive
+[prod]   - Installing tijsverkoyen/css-to-inline-styles (2.2.6): Extracting archive
+[prod]   - Installing symfony/var-dumper (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-uuid (v1.27.0): Extracting archive
+[prod]   - Installing symfony/uid (v6.3.0): Extracting archive
+[prod]   - Installing symfony/routing (v6.3.0): Extracting archive
+[prod]   - Installing symfony/process (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-php72 (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-intl-idn (v1.27.0): Extracting archive
+[prod]   - Installing symfony/mime (v6.3.0): Extracting archive
+[prod]   - Installing psr/event-dispatcher (1.0.0): Extracting archive
+[prod]   - Installing symfony/event-dispatcher-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/event-dispatcher (v6.3.0): Extracting archive
+[prod]   - Installing psr/log (3.0.0): Extracting archive
+[prod]   - Installing doctrine/lexer (3.0.0): Extracting archive
+[prod]   - Installing egulias/email-validator (4.0.1): Extracting archive
+[prod]   - Installing symfony/mailer (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-php83 (v1.27.0): Extracting archive
+[prod]   - Installing symfony/http-foundation (v6.3.0): Extracting archive
+[prod]   - Installing symfony/error-handler (v6.3.0): Extracting archive
+[prod]   - Installing symfony/http-kernel (v6.3.0): Extracting archive
+[prod]   - Installing ramsey/collection (2.0.0): Extracting archive
+[prod]   - Installing brick/math (0.11.0): Extracting archive
+[prod]   - Installing ramsey/uuid (4.7.4): Extracting archive
+[prod]   - Installing psr/simple-cache (3.0.0): Extracting archive
+[prod]   - Installing nunomaduro/termwind (v1.15.1): Extracting archive
+[prod]   - Installing symfony/translation-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/translation (v6.3.0): Extracting archive
+[prod]   - Installing nesbot/carbon (2.67.0): Extracting archive
+[prod]   - Installing monolog/monolog (3.3.1): Extracting archive
+[prod]   - Installing league/mime-type-detection (1.11.0): Extracting archive
+[prod]   - Installing league/flysystem (3.15.1): Extracting archive
+[prod]   - Installing league/flysystem-local (3.15.0): Extracting archive
+[prod]   - Installing nette/utils (v4.0.0): Extracting archive
+[prod]   - Installing nette/schema (v1.2.3): Extracting archive
+[prod]   - Installing dflydev/dot-access-data (v3.0.2): Extracting archive
+[prod]   - Installing league/config (v1.2.0): Extracting archive
+[prod]   - Installing league/commonmark (2.4.0): Extracting archive
+[prod]   - Installing laravel/serializable-closure (v1.3.0): Extracting archive
+[prod]   - Installing guzzlehttp/uri-template (v1.0.1): Extracting archive
+[prod]   - Installing fruitcake/php-cors (v1.2.0): Extracting archive
+[prod]   - Installing webmozart/assert (1.11.0): Extracting archive
+[prod]   - Installing dragonmantank/cron-expression (v3.3.2): Extracting archive
+[prod]   - Installing doctrine/inflector (2.0.8): Extracting archive
+[prod]   - Installing laravel/framework (v10.13.5): Extracting archive
+[prod]   - Installing blade-ui-kit/blade-icons (1.5.2): Extracting archive
+[prod]   - Installing danharrin/date-format-converter (v0.3.0): Extracting archive
+[prod]   - Installing deployer/deployer (v7.3.1): Extracting archive
+[prod]   - Installing spatie/laravel-package-tools (1.15.0): Extracting archive
+[prod]   - Installing livewire/livewire (v2.12.3): Extracting archive
+[prod]   - Installing spatie/invade (1.1.1): Extracting archive
+[prod]   - Installing masterminds/html5 (2.8.1): Extracting archive
+[prod]   - Installing league/uri-parser (1.4.1): Extracting archive
+[prod]   - Installing tgalopin/html-sanitizer (1.5.0): Extracting archive
+[prod]   - Installing ryangjchandler/blade-capture-directive (v0.3.0): Extracting archive
+[prod]   - Installing filament/support (v2.17.52): Extracting archive
+[prod]   - Installing blade-ui-kit/blade-heroicons (1.4.0): Extracting archive
+[prod]   - Installing filament/notifications (v2.17.52): Extracting archive
+[prod]   - Installing filament/forms (v2.17.52): Extracting archive
+[prod]   - Installing akaunting/laravel-money (4.0.1): Extracting archive
+[prod]   - Installing filament/tables (v2.17.52): Extracting archive
+[prod]   - Installing danharrin/livewire-rate-limiting (v1.1.0): Extracting archive
+[prod]   - Installing filament/filament (v2.17.52): Extracting archive
+[prod]   - Installing psr/http-message (2.0): Extracting archive
+[prod]   - Installing psr/http-client (1.0.2): Extracting archive
+[prod]   - Installing ralouphie/getallheaders (3.0.3): Extracting archive
+[prod]   - Installing psr/http-factory (1.0.2): Extracting archive
+[prod]   - Installing guzzlehttp/psr7 (2.5.0): Extracting archive
+[prod]   - Installing guzzlehttp/promises (2.0.0): Extracting archive
+[prod]   - Installing guzzlehttp/guzzle (7.7.0): Extracting archive
+[prod]   - Installing laravel/sanctum (v3.2.5): Extracting archive
+[prod]   - Installing laravel/telescope (v4.15.2): Extracting archive
+[prod]   - Installing nikic/php-parser (v4.15.5): Extracting archive
+[prod]   - Installing psy/psysh (v0.11.18): Extracting archive
+[prod]   - Installing laravel/tinker (v2.8.1): Extracting archive
+[prod]   - Installing nativephp/php-bin (0.3.0): Extracting archive
+[prod]   - Installing nativephp/laravel (0.3.0): Extracting archive
+[prod]   - Installing nativephp/electron (0.3.3): Extracting archive
+[prod] Package league/uri-parser is abandoned, you should avoid using it. No replacement was suggested.
+[prod] Package tgalopin/html-sanitizer is abandoned, you should avoid using it. Use symfony/html-sanitizer instead.
+[prod] Generating optimized autoload files
+[prod] > post-autoload-dump: Illuminate\Foundation\ComposerScripts::postAutoloadDump
+[prod] > post-autoload-dump: @php artisan package:discover --ansi
+[prod]   [37;44m INFO [39;49m Discovering packages.
+[prod]   akaunting/laravel-money [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m
+[prod]  [32;1mDONE[39;22m
+[prod]   blade-ui-kit/blade-heroicons [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   blade-ui-kit/blade-icons
+[prod] [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/filament [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m
+[prod]  [32;1mDONE[39;22m
+[prod]   filament/forms [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/notifications [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/support [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/tables [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   laravel/sanctum [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   laravel/telescope [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   laravel/tinker [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   livewire/livewire [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nativephp/electron [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nativephp/laravel [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nesbot/carbon
+[prod] [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nunomaduro/termwind [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   ryangjchandler/blade-capture-directive [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod] > post-autoload-dump: @php artisan vendor:publish --force --tag=livewire:assets --ansi
+[prod]   [37;44m INFO [39;49m Publishing [1m[livewire:assets][22m assets.
+[prod]   Copying directory [1m[vendor/livewire/livewire/dist][22m to [1m[public/vendor/livewire][22m  [32;1mDONE[39;22m
+[prod] 61 packages you are using are looking for funding.
+[prod] Use the `composer fund` command to find out more!
+done deploy:vendors 21s 866ms
+task artisan:storage:link
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/10/artisan --version
+[prod] Laravel Framework 10.13.5
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/10/artisan storage:link
+[prod]    INFO  The [public/storage] link has been connected to [storage/app/public].
+done artisan:storage:link 1s 37ms
+task artisan:view:cache
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/10/artisan view:cache
+[prod]    INFO  Blade templates cached successfully.
+done artisan:view:cache 1s 37ms
+task artisan:config:cache
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/10/artisan config:cache
+[prod]    INFO  Configuration cached successfully.
+done artisan:config:cache 581ms
+task artisan:migrate
+[prod] run if [ -s /var/www/web-evaluasi/releases/10/.env ]; then echo +right; fi
+[prod] +right
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/10/artisan migrate --force
+[prod] In Connection.php line 795:
+[prod]                                                                                
+[prod]   could not find driver (Connection: mysql, SQL: select * from information_sc  
+[prod]   hema.tables where table_schema = evalapp and table_name = migrations and ta  
+[prod]   ble_type = 'BASE TABLE')                                                     
+[prod]                                                                                
+[prod] In Connector.php line 65:
+[prod]   could not find driver  
+[prod]                          
+Deployer\Exception\RunException: The command "/usr/bin/php /var/www/web-evaluasi/releases/10/artisan migrate --force" failed. in phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Component/Ssh/Client.php:110
+Stack trace:
+#0 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/functions.php(393): Deployer\Component\Ssh\Client->run()
+#1 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/functions.php(417): Deployer\{closure}()
+#2 phar:///var/www/evalapp/vendor/deployer/deployer/dep/recipe/laravel.php(71): Deployer\run()
+#3 [internal function]: Deployer\{closure}()
+#4 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Task/Task.php(90): call_user_func()
+#5 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Executor/Worker.php(38): Deployer\Task\Task->run()
+#6 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Command/WorkerCommand.php(52): Deployer\Executor\Worker->execute()
+#7 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Command/Command.php(298): Deployer\Command\WorkerCommand->execute()
+#8 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Application.php(1040): Symfony\Component\Console\Command\Command->run()
+#9 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Application.php(301): Symfony\Component\Console\Application->doRunCommand()
+#10 phar:///var/www/evalapp/vendor/deployer/deployer/dep/vendor/symfony/console/Application.php(171): Symfony\Component\Console\Application->doRun()
+#11 phar:///var/www/evalapp/vendor/deployer/deployer/dep/src/Deployer.php(317): Symfony\Component\Console\Application->run()
+#12 phar:///var/www/evalapp/vendor/deployer/deployer/dep/bin/dep(96): Deployer\Deployer::run()
+#13 /var/www/evalapp/vendor/deployer/deployer/dep(4): require('...')
+#14 {main}
+task deploy:failed
+done deploy:failed 122ms
+task deploy:unlock
+[prod] run rm -f /var/www/web-evaluasi/.dep/deploy.lock
+done deploy:unlock 366ms
+task deploy:info
+done deploy:info 95ms
+task deploy:setup
+[prod] run [ -d /var/www/web-evaluasi ] || mkdir -p /var/www/web-evaluasi;
+cd /var/www/web-evaluasi;
+[ -d .dep ] || mkdir .dep;
+[ -d releases ] || mkdir releases;
+[ -d shared ] || mkdir shared;
+task deploy:info
+done deploy:info 131ms
+task deploy:setup
+[prod] run [ -d /var/www/web-evaluasi ] || mkdir -p /var/www/web-evaluasi;
+cd /var/www/web-evaluasi;
+[ -d .dep ] || mkdir .dep;
+[ -d releases ] || mkdir releases;
+[ -d shared ] || mkdir shared;
+[prod] run if [ ! -L /var/www/web-evaluasi/current ] && [ -d /var/www/web-evaluasi/current ]; then echo +correct; fi
+done deploy:setup 6s 872ms
+task deploy:lock
+[localhost] laradock
+[prod] run [ -f /var/www/web-evaluasi/.dep/deploy.lock ] && echo +locked || echo 'laradock' > /var/www/web-evaluasi/.dep/deploy.lock
+done deploy:lock 213ms
+task deploy:release
+[prod] run cd /var/www/web-evaluasi && (if [ -h release ]; then echo +precise; fi)
+[prod] +precise
+[prod] run cd /var/www/web-evaluasi && (rm release)
+[prod] run cd /var/www/web-evaluasi && (if [ -d releases ] && [ "$(ls -A releases)" ]; then echo +appropriate; fi)
+[prod] +appropriate
+[prod] run cd /var/www/web-evaluasi && (cd releases && ls -t -1 -d */)
+[prod] 10/
+[prod] 1/
+[prod] 9/
+[prod] 8/
+[prod] 7/
+[prod] 6/
+[prod] 5/
+[prod] 4/
+[prod] 3/
+[prod] 2/
+[prod] run cd /var/www/web-evaluasi && (if [ -f .dep/releases_log ]; then echo +right; fi)
+[prod] +right
+[prod] run cd /var/www/web-evaluasi && (tail -n 300 .dep/releases_log)
+[prod] {"created_at":"2023-07-26T10:07:13+0000","release_name":"1","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:34:54+0000","release_name":"2","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:38:32+0000","release_name":"3","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:39:19+0000","release_name":"4","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:43:25+0000","release_name":"5","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:47:51+0000","release_name":"6","user":"Frenki Herlambang Prasetyo","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:51:09+0000","release_name":"7","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:51:22+0000","release_name":"8","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:52:45+0000","release_name":"9","user":"laradock","target":"HEAD"}
+[prod] {"created_at":"2023-08-14T04:54:56+0000","release_name":"10","user":"laradock","target":"HEAD"}
+[prod] run cd /var/www/web-evaluasi && (cat .dep/latest_release || echo 0)
+[prod] 10
+[prod] run cd /var/www/web-evaluasi && (if [ -d releases/11 ]; then echo +correct; fi)
+[prod] run cd /var/www/web-evaluasi && (echo 11 > .dep/latest_release)
+[prod] run cd /var/www/web-evaluasi && (echo '{"created_at":"2023-08-14T05:17:16+0000","release_name":"11","user":"laradock","target":"HEAD"}' >> .dep/releases_log)
+[prod] run cd /var/www/web-evaluasi && (mkdir -p releases/11)
+[prod] run cd /var/www/web-evaluasi && ((man ln 2>&1 || ln -h 2>&1 || ln --help 2>&1) | grep -- --relative || true)
+[prod]        -r, --relative
+[prod] run cd /var/www/web-evaluasi && (ln -nfs --relative releases/11 /var/www/web-evaluasi/release)
+done deploy:release 1s 492ms
+task deploy:update_code
+[prod] run command -v 'git' || which 'git' || type -p 'git'
+[prod] /usr/bin/git
+[prod] run [ -d /var/www/web-evaluasi/.dep/repo ] || mkdir -p /var/www/web-evaluasi/.dep/repo
+[prod] run export GIT_TERMINAL_PROMPT='0' GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new'; [ -f /var/www/web-evaluasi/.dep/repo/HEAD ] || /usr/bin/git clone --mirror git@github.com:frenkiherlambang/evalapp.git /var/www/web-evaluasi/.dep/repo 2>&1
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git config --get remote.origin.url)
+[prod] git@github.com:frenkiherlambang/evalapp.git
+[prod] run export GIT_TERMINAL_PROMPT='0' GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new'; cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git remote update 2>&1)
+[prod] Fetching origin
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (if [ -h /var/www/web-evaluasi/release ]; then echo +true; fi)
+[prod] +true
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (readlink /var/www/web-evaluasi/release)
+[prod] releases/11
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git archive HEAD | tar -x -f - -C /var/www/web-evaluasi/releases/11 2>&1)
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (/usr/bin/git rev-list HEAD -1)
+[prod] 0015ff3a02b447c1f5d51d8d99de491ff2d379a9
+[prod] run cd /var/www/web-evaluasi/.dep/repo && (echo '0015ff3a02b447c1f5d51d8d99de491ff2d379a9' > /var/www/web-evaluasi/releases/11/REVISION)
+done deploy:update_code 3s 762ms
+task deploy:shared
+[prod] run if [ -d /var/www/web-evaluasi/shared/storage ]; then echo +true; fi
+[prod] +true
+[prod] run rm -rf /var/www/web-evaluasi/releases/11/storage
+[prod] run mkdir -p `dirname /var/www/web-evaluasi/releases/11/storage`
+[prod] run ln -nfs --relative /var/www/web-evaluasi/shared/storage /var/www/web-evaluasi/releases/11/storage
+[prod] run if [ -d /var/www/web-evaluasi/shared/. ]; then echo +true; fi
+[prod] +true
+[prod] run if [ -f /var/www/web-evaluasi/shared/.env ]; then echo +right; fi
+[prod] +right
+[prod] run if [ -f $(echo /var/www/web-evaluasi/releases/11/.env) ]; then rm -rf /var/www/web-evaluasi/releases/11/.env; fi
+[prod] run if [ ! -d $(echo /var/www/web-evaluasi/releases/11/.) ]; then mkdir -p /var/www/web-evaluasi/releases/11/.;fi
+[prod] run [ -f /var/www/web-evaluasi/shared/.env ] || touch /var/www/web-evaluasi/shared/.env
+[prod] run ln -nfs --relative /var/www/web-evaluasi/shared/.env /var/www/web-evaluasi/releases/11/.env
+done deploy:shared 1s 96ms
+task deploy:writable
+[prod] run if [ -h /var/www/web-evaluasi/release ]; then echo +yes; fi
+[prod] +yes
+[prod] run cd /var/www/web-evaluasi/releases/11 && (mkdir -p bootstrap/cache storage storage/app storage/app/public storage/framework storage/framework/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs)
+[prod] run cd /var/www/web-evaluasi/releases/11 && (ps axo comm,user | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | sort | awk '{print $NF}' | uniq)
+[prod] www-data
+[prod] run cd /var/www/web-evaluasi/releases/11 && (chmod 2>&1; true)
+[prod] chmod: missing operand
+[prod] Try 'chmod --help' for more information.
+[prod] run cd /var/www/web-evaluasi/releases/11 && (if hash setfacl 2>/dev/null; then echo +indeed; fi)
+[prod] +indeed
+[prod] run cd /var/www/web-evaluasi/releases/11 && (if id -u root &>/dev/null 2>&1 || exit 0; then echo +correct; fi)
+[prod] +correct
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p bootstrap/cache | grep "^user:www-data:.*w" | wc -l)
+[prod] run cd /var/www/web-evaluasi/releases/11 && (setfacl -L  -m u:"www-data":rwX -m u:root:rwX bootstrap/cache)
+[prod] run cd /var/www/web-evaluasi/releases/11 && (setfacl -dL  -m u:"www-data":rwX -m u:root:rwX bootstrap/cache)
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/app | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/app/public | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/framework | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/framework/cache | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/framework/cache/data | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/framework/sessions | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/framework/views | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+[prod] run cd /var/www/web-evaluasi/releases/11 && (getfacl -p storage/logs | grep "^user:www-data:.*w" | wc -l)
+[prod] 1
+done deploy:writable 1s 950ms
+task deploy:vendors
+[prod] run if hash unzip 2>/dev/null; then echo +appropriate; fi
+[prod] +appropriate
+[prod] run if [ -f /var/www/web-evaluasi/.dep/composer.phar ]; then echo +precise; fi
+[prod] run if hash composer 2>/dev/null; then echo +precise; fi
+[prod] +precise
+[prod] run command -v 'composer' || which 'composer' || type -p 'composer'
+[prod] /usr/local/bin/composer
+[prod] run command -v 'php' || which 'php' || type -p 'php'
+[prod] /usr/bin/php
+[prod] run cd /var/www/web-evaluasi/releases/11 && /usr/bin/php /usr/local/bin/composer install --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader 2>&1
+[prod] Composer plugins have been disabled for safety in this non-interactive session. Set COMPOSER_ALLOW_SUPERUSER=1 if you want to allow plugins to run as root/super user.
+[prod] Do not run Composer as root/super user! See https://getcomposer.org/root for details
+[prod] Installing dependencies from lock file
+[prod] Verifying lock file contents can be installed on current platform.
+[prod] Dependency resolution completed in 0.001 seconds
+[prod] Package operations: 93 installs, 0 updates, 0 removals
+[prod] Installs: symfony/finder:v6.3.0, symfony/polyfill-mbstring:v1.27.0, symfony/polyfill-intl-normalizer:v1.27.0, symfony/polyfill-intl-grapheme:v1.27.0, symfony/polyfill-ctype:v1.27.0, symfony/string:v6.3.0, psr/container:2.0.2, symfony/service-contracts:v3.3.0, symfony/deprecation-contracts:v3.3.0, symfony/console:v6.3.0, voku/portable-ascii:2.0.1, symfony/polyfill-php80:v1.27.0, phpoption/phpoption:1.9.1, graham-campbell/result-type:v1.1.1, vlucas/phpdotenv:v5.5.0, symfony/css-selector:v6.3.0, tijsverkoyen/css-to-inline-styles:2.2.6, symfony/var-dumper:v6.3.0, symfony/polyfill-uuid:v1.27.0, symfony/uid:v6.3.0, symfony/routing:v6.3.0, symfony/process:v6.3.0, symfony/polyfill-php72:v1.27.0, symfony/polyfill-intl-idn:v1.27.0, symfony/mime:v6.3.0, psr/event-dispatcher:1.0.0, symfony/event-dispatcher-contracts:v3.3.0, symfony/event-dispatcher:v6.3.0, psr/log:3.0.0, doctrine/lexer:3.0.0, egulias/email-validator:4.0.1, symfony/mailer:v6.3.0, symfony/polyfill-php83:v1.27.0, symfony/http-foundation:v6.3.0, symfony/error-handler:v6.3.0, symfony/http-kernel:v6.3.0, ramsey/collection:2.0.0, brick/math:0.11.0, ramsey/uuid:4.7.4, psr/simple-cache:3.0.0, nunomaduro/termwind:v1.15.1, symfony/translation-contracts:v3.3.0, symfony/translation:v6.3.0, nesbot/carbon:2.67.0, monolog/monolog:3.3.1, league/mime-type-detection:1.11.0, league/flysystem:3.15.1, league/flysystem-local:3.15.0, nette/utils:v4.0.0, nette/schema:v1.2.3, dflydev/dot-access-data:v3.0.2, league/config:v1.2.0, league/commonmark:2.4.0, laravel/serializable-closure:v1.3.0, guzzlehttp/uri-template:v1.0.1, fruitcake/php-cors:v1.2.0, webmozart/assert:1.11.0, dragonmantank/cron-expression:v3.3.2, doctrine/inflector:2.0.8, laravel/framework:v10.13.5, blade-ui-kit/blade-icons:1.5.2, danharrin/date-format-converter:v0.3.0, deployer/deployer:v7.3.1, spatie/laravel-package-tools:1.15.0, livewire/livewire:v2.12.3, spatie/invade:1.1.1, masterminds/html5:2.8.1, league/uri-parser:1.4.1, tgalopin/html-sanitizer:1.5.0, ryangjchandler/blade-capture-directive:v0.3.0, filament/support:v2.17.52, blade-ui-kit/blade-heroicons:1.4.0, filament/notifications:v2.17.52, filament/forms:v2.17.52, akaunting/laravel-money:4.0.1, filament/tables:v2.17.52, danharrin/livewire-rate-limiting:v1.1.0, filament/filament:v2.17.52, psr/http-message:2.0, psr/http-client:1.0.2, ralouphie/getallheaders:3.0.3, psr/http-factory:1.0.2, guzzlehttp/psr7:2.5.0, guzzlehttp/promises:2.0.0, guzzlehttp/guzzle:7.7.0, laravel/sanctum:v3.2.5, laravel/telescope:v4.15.2, nikic/php-parser:v4.15.5, psy/psysh:v0.11.18, laravel/tinker:v2.8.1, nativephp/php-bin:0.3.0, nativephp/laravel:0.3.0, nativephp/electron:0.3.3
+[prod]   - Installing symfony/finder (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-mbstring (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-intl-normalizer (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-intl-grapheme (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-ctype (v1.27.0): Extracting archive
+[prod]   - Installing symfony/string (v6.3.0): Extracting archive
+[prod]   - Installing psr/container (2.0.2): Extracting archive
+[prod]   - Installing symfony/service-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/deprecation-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/console (v6.3.0): Extracting archive
+[prod]   - Installing voku/portable-ascii (2.0.1): Extracting archive
+[prod]   - Installing symfony/polyfill-php80 (v1.27.0): Extracting archive
+[prod]   - Installing phpoption/phpoption (1.9.1): Extracting archive
+[prod]   - Installing graham-campbell/result-type (v1.1.1): Extracting archive
+[prod]   - Installing vlucas/phpdotenv (v5.5.0): Extracting archive
+[prod]   - Installing symfony/css-selector (v6.3.0): Extracting archive
+[prod]   - Installing tijsverkoyen/css-to-inline-styles (2.2.6): Extracting archive
+[prod]   - Installing symfony/var-dumper (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-uuid (v1.27.0): Extracting archive
+[prod]   - Installing symfony/uid (v6.3.0): Extracting archive
+[prod]   - Installing symfony/routing (v6.3.0): Extracting archive
+[prod]   - Installing symfony/process (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-php72 (v1.27.0): Extracting archive
+[prod]   - Installing symfony/polyfill-intl-idn (v1.27.0): Extracting archive
+[prod]   - Installing symfony/mime (v6.3.0): Extracting archive
+[prod]   - Installing psr/event-dispatcher (1.0.0): Extracting archive
+[prod]   - Installing symfony/event-dispatcher-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/event-dispatcher (v6.3.0): Extracting archive
+[prod]   - Installing psr/log (3.0.0): Extracting archive
+[prod]   - Installing doctrine/lexer (3.0.0): Extracting archive
+[prod]   - Installing egulias/email-validator (4.0.1): Extracting archive
+[prod]   - Installing symfony/mailer (v6.3.0): Extracting archive
+[prod]   - Installing symfony/polyfill-php83 (v1.27.0): Extracting archive
+[prod]   - Installing symfony/http-foundation (v6.3.0): Extracting archive
+[prod]   - Installing symfony/error-handler (v6.3.0): Extracting archive
+[prod]   - Installing symfony/http-kernel (v6.3.0): Extracting archive
+[prod]   - Installing ramsey/collection (2.0.0): Extracting archive
+[prod]   - Installing brick/math (0.11.0): Extracting archive
+[prod]   - Installing ramsey/uuid (4.7.4): Extracting archive
+[prod]   - Installing psr/simple-cache (3.0.0): Extracting archive
+[prod]   - Installing nunomaduro/termwind (v1.15.1): Extracting archive
+[prod]   - Installing symfony/translation-contracts (v3.3.0): Extracting archive
+[prod]   - Installing symfony/translation (v6.3.0): Extracting archive
+[prod]   - Installing nesbot/carbon (2.67.0): Extracting archive
+[prod]   - Installing monolog/monolog (3.3.1): Extracting archive
+[prod]   - Installing league/mime-type-detection (1.11.0): Extracting archive
+[prod]   - Installing league/flysystem (3.15.1): Extracting archive
+[prod]   - Installing league/flysystem-local (3.15.0): Extracting archive
+[prod]   - Installing nette/utils (v4.0.0): Extracting archive
+[prod]   - Installing nette/schema (v1.2.3): Extracting archive
+[prod]   - Installing dflydev/dot-access-data (v3.0.2): Extracting archive
+[prod]   - Installing league/config (v1.2.0): Extracting archive
+[prod]   - Installing league/commonmark (2.4.0): Extracting archive
+[prod]   - Installing laravel/serializable-closure (v1.3.0): Extracting archive
+[prod]   - Installing guzzlehttp/uri-template (v1.0.1): Extracting archive
+[prod]   - Installing fruitcake/php-cors (v1.2.0): Extracting archive
+[prod]   - Installing webmozart/assert (1.11.0): Extracting archive
+[prod]   - Installing dragonmantank/cron-expression (v3.3.2): Extracting archive
+[prod]   - Installing doctrine/inflector (2.0.8): Extracting archive
+[prod]   - Installing laravel/framework (v10.13.5): Extracting archive
+[prod]   - Installing blade-ui-kit/blade-icons (1.5.2): Extracting archive
+[prod]   - Installing danharrin/date-format-converter (v0.3.0): Extracting archive
+[prod]   - Installing deployer/deployer (v7.3.1): Extracting archive
+[prod]   - Installing spatie/laravel-package-tools (1.15.0): Extracting archive
+[prod]   - Installing livewire/livewire (v2.12.3): Extracting archive
+[prod]   - Installing spatie/invade (1.1.1): Extracting archive
+[prod]   - Installing masterminds/html5 (2.8.1): Extracting archive
+[prod]   - Installing league/uri-parser (1.4.1): Extracting archive
+[prod]   - Installing tgalopin/html-sanitizer (1.5.0): Extracting archive
+[prod]   - Installing ryangjchandler/blade-capture-directive (v0.3.0): Extracting archive
+[prod]   - Installing filament/support (v2.17.52): Extracting archive
+[prod]   - Installing blade-ui-kit/blade-heroicons (1.4.0): Extracting archive
+[prod]   - Installing filament/notifications (v2.17.52): Extracting archive
+[prod]   - Installing filament/forms (v2.17.52): Extracting archive
+[prod]   - Installing akaunting/laravel-money (4.0.1): Extracting archive
+[prod]   - Installing filament/tables (v2.17.52): Extracting archive
+[prod]   - Installing danharrin/livewire-rate-limiting (v1.1.0): Extracting archive
+[prod]   - Installing filament/filament (v2.17.52): Extracting archive
+[prod]   - Installing psr/http-message (2.0): Extracting archive
+[prod]   - Installing psr/http-client (1.0.2): Extracting archive
+[prod]   - Installing ralouphie/getallheaders (3.0.3): Extracting archive
+[prod]   - Installing psr/http-factory (1.0.2): Extracting archive
+[prod]   - Installing guzzlehttp/psr7 (2.5.0): Extracting archive
+[prod]   - Installing guzzlehttp/promises (2.0.0): Extracting archive
+[prod]   - Installing guzzlehttp/guzzle (7.7.0): Extracting archive
+[prod]   - Installing laravel/sanctum (v3.2.5): Extracting archive
+[prod]   - Installing laravel/telescope (v4.15.2): Extracting archive
+[prod]   - Installing nikic/php-parser (v4.15.5): Extracting archive
+[prod]   - Installing psy/psysh (v0.11.18): Extracting archive
+[prod]   - Installing laravel/tinker (v2.8.1): Extracting archive
+[prod]   - Installing nativephp/php-bin (0.3.0): Extracting archive
+[prod]   - Installing nativephp/laravel (0.3.0): Extracting archive
+[prod]   - Installing nativephp/electron (0.3.3): Extracting archive
+[prod] Package league/uri-parser is abandoned, you should avoid using it. No replacement was suggested.
+[prod] Package tgalopin/html-sanitizer is abandoned, you should avoid using it. Use symfony/html-sanitizer instead.
+[prod] Generating optimized autoload files
+[prod] > post-autoload-dump: Illuminate\Foundation\ComposerScripts::postAutoloadDump
+[prod] > post-autoload-dump: @php artisan package:discover --ansi
+[prod]   [37;44m INFO [39;49m Discovering packages.
+[prod]   akaunting/laravel-money [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   blade-ui-kit/blade-heroicons [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   blade-ui-kit/blade-icons [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/filament [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m
+[prod]  [32;1mDONE[39;22m
+[prod]   filament/forms [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/notifications [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m
+[prod]  [32;1mDONE[39;22m
+[prod]   filament/support [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   filament/tables [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   laravel/sanctum [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   laravel/telescope [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   laravel/tinker [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   livewire/livewire
+[prod] [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nativephp/electron [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nativephp/laravel
+[prod] [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nesbot/carbon [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   nunomaduro/termwind
+[prod] [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod]   ryangjchandler/blade-capture-directive [90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m[90m.[39m [32;1mDONE[39;22m
+[prod] > post-autoload-dump: @php artisan vendor:publish --force --tag=livewire:assets --ansi
+[prod]   [37;44m INFO [39;49m Publishing [1m[livewire:assets][22m assets.
+[prod]   Copying directory [1m[vendor/livewire/livewire/dist][22m to [1m[public/vendor/livewire][22m  [32;1mDONE[39;22m
+[prod] 61 packages you are using are looking for funding.
+[prod] Use the `composer fund` command to find out more!
+done deploy:vendors 6s 806ms
+task artisan:storage:link
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/11/artisan --version
+[prod] Laravel Framework 10.13.5
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/11/artisan storage:link
+[prod]    INFO  The [public/storage] link has been connected to [storage/app/public].
+done artisan:storage:link 854ms
+task artisan:view:cache
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/11/artisan view:cache
+[prod]    INFO  Blade templates cached successfully.
+done artisan:view:cache 1s 37ms
+task artisan:config:cache
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/11/artisan config:cache
+[prod]    INFO  Configuration cached successfully.
+done artisan:config:cache 517ms
+task artisan:migrate
+[prod] run if [ -s /var/www/web-evaluasi/releases/11/.env ]; then echo +correct; fi
+[prod] +correct
+[prod] run /usr/bin/php /var/www/web-evaluasi/releases/11/artisan migrate --force
+[prod]    INFO  Nothing to migrate.
+done artisan:migrate 640ms
+task npm:install
+[prod] run command -v 'npm' || which 'npm' || type -p 'npm'
+[prod] /usr/bin/npm
+[prod] run cd /var/www/web-evaluasi/releases/11 && /usr/bin/npm ci
+[prod] added 112 packages, and audited 113 packages in 2s
+[prod] 20 packages are looking for funding
+[prod]   run `npm fund` for details
+[prod] found 0 vulnerabilities
+[prod] npm notice 
+[prod] npm
+[prod]  notice New minor version of npm available! 9.6.7 -> 9.8.1
+[prod] npm notice Changelog: <https://github.com/npm/cli/releases/tag/v9.8.1>
+[prod] npm notice Run `npm install -g npm@9.8.1` to update!
+[prod] npm notice
+done npm:install 3s 479ms
+task npm:run:prod
+[prod] run cd /var/www/web-evaluasi/releases/11 && (npm run build)
+[prod] > build
+[prod] > vite build
+[prod] vite v4.3.9 building for production...
+[prod] transforming...
+[prod] ✓ 47 modules transformed.
+[prod] rendering chunks...
+[prod] computing gzip size...
+[prod] public/build/manifest.json             0.26 kB │ gzip:  0.13 kB
+[prod] public/build/assets/app-dd0cc012.css  78.55 kB │ gzip: 12.52 kB
+[prod] public/build/assets/app-6870bb4e.js   70.27 kB │ gzip: 26.21 kB
+[prod] ✓ built in 2.96s
+done npm:run:prod 3s 947ms
+task deploy:symlink
+[prod] run (man mv 2>&1 || mv -h 2>&1 || mv --help 2>&1) | grep -- --no-target-directory || true
+[prod]        -T, --no-target-directory
+[prod] run mv -T /var/www/web-evaluasi/release /var/www/web-evaluasi/current
+done deploy:symlink 397ms
+task deploy:unlock
+[prod] run rm -f /var/www/web-evaluasi/.dep/deploy.lock
+done deploy:unlock 213ms
+task deploy:cleanup
+[prod] run cd /var/www/web-evaluasi && if [ -e release ]; then rm release; fi
+[prod] run  rm -rf /var/www/web-evaluasi/releases/1
+done deploy:cleanup 1s 99ms
+task deploy:success
+done deploy:success 91ms
+task php-fpm:reload
+[prod] run sudo systemctl reload php8.1-fpm
+done php-fpm:reload 244ms

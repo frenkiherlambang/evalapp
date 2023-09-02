@@ -9,7 +9,9 @@ use App\Models\Category;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\ColorPicker;
@@ -29,9 +31,10 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('survey_id')
-                    ->required(),
-                Forms\Components\TextInput::make('name')
+
+                Select::make('survey')
+                    ->relationship('survey', 'name')->required(),
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                     Repeater::make('feedbacks')->schema([
@@ -41,20 +44,20 @@ class CategoryResource extends Resource
                         ColorPicker::make('fontColor')->required(),
 
                     ])
-            ]);
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('survey_id'),
-                Tables\Columns\TextColumn::make('name'),
-                // Tables\Columns\TextColumn::make('feedbacks'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                TextColumn::make('survey.name'),
+                TextColumn::make('name'),
+                // TextColumn::make('feedbacks'),
+                TextColumn::make('created_at')
+                    ->since(),
+                TextColumn::make('updated_at')
+                    ->since(),
             ])
             ->filters([
                 //

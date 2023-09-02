@@ -13,6 +13,10 @@ class Category extends Model
         'feedbacks' => 'array',
     ];
 
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class);
+    }
     public function questions()
     {
         return $this->hasMany(Question::class);
